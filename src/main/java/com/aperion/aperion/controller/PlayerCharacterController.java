@@ -3,8 +3,11 @@ package com.aperion.aperion.controller;
 import com.aperion.aperion.model.PlayerCharacter;
 import com.aperion.aperion.service.PlayerCharacterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
@@ -28,8 +31,10 @@ public class PlayerCharacterController {
 
     // Crear un personaje nuevo
     @PostMapping
-    public PlayerCharacter createPlayerCharacter(@RequestBody PlayerCharacter playerCharacter) {
-        return playerCharacterService.createPlayerCharacter(playerCharacter);
+    public ResponseEntity<PlayerCharacter> createPlayerCharacter(@RequestBody PlayerCharacter playerCharacter) {
+        // Llama al servicio que ya maneja la lógica de establecer valores predeterminados
+        PlayerCharacter createdPlayerCharacter = playerCharacterService.createPlayerCharacter(playerCharacter);
+        return new ResponseEntity<>(createdPlayerCharacter, HttpStatus.CREATED);
     }
 
 

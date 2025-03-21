@@ -3,6 +3,8 @@ package com.aperion.aperion.controller;
 import com.aperion.aperion.model.Action;
 import com.aperion.aperion.service.ActionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,14 +30,15 @@ public class ActionController {
 
     // Crear una nueva acción
     @PostMapping
-    public Action createAction(@RequestBody Action action) {
-        return actionService.createAction(action);
+    public ResponseEntity<Action> createAction(@RequestBody Action action) {
+        Action createdAction = actionService.createAction(action);
+        return new ResponseEntity<>(createdAction, HttpStatus.CREATED);
     }
 
     // Actualizar una acción existente
     @PutMapping("/{id}")
-    public Action updateAction(@PathVariable Long id, @RequestBody Action action) {
-        return actionService.updateAction(id, action);
+    public Action updateAction(@PathVariable Long id, @RequestBody Action updatedAction) {
+        return actionService.updateAction(id, updatedAction);
     }
 
     // Eliminar acción

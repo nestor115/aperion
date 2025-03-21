@@ -1,6 +1,9 @@
 package com.aperion.aperion.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,7 +13,10 @@ import java.util.List;
 import java.util.Set;
 
 
+@Setter
+@Getter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "player_character")
 public class PlayerCharacter {
     @Id
@@ -21,16 +27,19 @@ public class PlayerCharacter {
     private int level;
     private int attributePoints;
 
-    @OneToMany(mappedBy = "playerCharacter", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference // Evita la recursión infinita
-    private Set<PlayerCharacterAttribute> attributes;
+    // Atributos
+    private int strength;
+    private int agility;
+    private int constitution;
+    private int dexterity;
+    private int intelligence;
+    private int perception;
+    private int wisdom;
+    private int charisma;
 
-    public PlayerCharacter() {}
-    public PlayerCharacter(String name, int level, int attributePoints) {
-        this.name = name;
-        this.level = level;
-        this.attributePoints = attributePoints;
-    }
+
+
+    //@JsonIgnoreProperties("actions")
     // Relación muchos a muchos con Action
     @ManyToMany
     @JoinTable(
@@ -38,54 +47,23 @@ public class PlayerCharacter {
             joinColumns = @JoinColumn(name = "player_character_id"),
             inverseJoinColumns = @JoinColumn(name = "action_id")
     )
-    @JsonManagedReference // Evita el bucle en la serialización
-    private Set<Action> actions ;
+    //@JsonManagedReference // Evita el bucle en la serialización
+    private Set<Action> actions = new HashSet<>();
 
-    public Long getId() {
-        return id;
-    }
+    public PlayerCharacter() {}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public PlayerCharacter(String name, int level, int attributePoints, int strength, int agility, int constitution,
+                           int dexterity, int intelligence, int perception, int wisdom, int charisma) {
         this.name = name;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public void setLevel(int level) {
         this.level = level;
-    }
-
-    public int getAttributePoints() {
-        return attributePoints;
-    }
-
-    public void setAttributePoints(int attributePoints) {
         this.attributePoints = attributePoints;
-    }
-
-    public Set<PlayerCharacterAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<PlayerCharacterAttribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public Set<Action> getActions() {
-        return actions;
-    }
-
-    public void setActions(Set<Action> actions) {
-        this.actions = actions;
+        this.strength = strength;
+        this.agility = agility;
+        this.constitution = constitution;
+        this.dexterity = dexterity;
+        this.intelligence = intelligence;
+        this.perception = perception;
+        this.wisdom = wisdom;
+        this.charisma = charisma;
     }
 }

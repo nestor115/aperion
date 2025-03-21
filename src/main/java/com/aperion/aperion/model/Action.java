@@ -1,6 +1,9 @@
 package com.aperion.aperion.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Action {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +24,9 @@ public class Action {
     private int actionPoints;
 
     // Relación muchos a muchos con PlayerCharacter
+   // @JsonIgnoreProperties("characters")
     @ManyToMany(mappedBy = "actions")
-    @JsonBackReference // Evita que se serialicen las referencias recursivas
+    //@JsonBackReference // Evita que se serialicen las referencias recursivas
     private Set<PlayerCharacter> characters = new HashSet<>();
 
     public Long getId() {
