@@ -66,4 +66,14 @@ public class PlayerCharacter {
         this.wisdom = wisdom;
         this.charisma = charisma;
     }
+    public void setDefaultAttributes(PlayerCharacter playerCharacter) {
+        if (playerCharacter.getStrength() == 0) playerCharacter.setStrength(0);
+        if (playerCharacter.getAgility() == 0) playerCharacter.setAgility(0);
+        if (playerCharacter.getConstitution() == 0) playerCharacter.setConstitution(0);
+        if (playerCharacter.getDexterity() == 0) playerCharacter.setDexterity(0);
+        if (playerCharacter.getIntelligence() == 0) playerCharacter.setIntelligence(0);
+        if (playerCharacter.getPerception() == 0) playerCharacter.setPerception(0);
+        if (playerCharacter.getWisdom() == 0) playerCharacter.setWisdom(0);
+        if (playerCharacter.getCharisma() == 0) playerCharacter.setCharisma(0);
+    }
 }

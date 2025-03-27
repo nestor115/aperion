@@ -1,6 +1,8 @@
 package com.aperion.aperion.service;
 
+import com.aperion.aperion.model.Action;
 import com.aperion.aperion.model.PlayerCharacter;
+import com.aperion.aperion.repository.ActionRepository;
 import com.aperion.aperion.repository.PlayerCharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class PlayerCharacterService {
     @Autowired
     private PlayerCharacterRepository playerCharacterRepository;
 
+    @Autowired
+    private ActionRepository actionRepository;
+
     // Crear un nuevo personaje
     public PlayerCharacter createPlayerCharacter(PlayerCharacter playerCharacter) {
         // Si no se proporcionan acciones, inicializa el conjunto de acciones como vacío
@@ -22,15 +27,20 @@ public class PlayerCharacterService {
             playerCharacter.setActions(new HashSet<>());
         }
 
+        // Asegúrate de que cada acción tiene un nombre, si no lo tiene, asignarlo desde la base de datos o crear uno nuevo
+        for (Action action : playerCharacter.getActions()) {
+            if (action.getName() == null) {
+                // Asignar el nombre de la acción si es necesario, podrías buscarlo en la base de datos
+                Action existingAction = actionRepository.findById(action.getId()).orElse(null);
+                if (existingAction != null) {
+                    action.setName(existingAction.getName());
+                } else {
+                    action.setName("Nombre Predeterminado");
+                }
+            }
+        }
         // Establecer atributos predeterminados si no se proporcionan
-        if (playerCharacter.getStrength() == 0) playerCharacter.setStrength(0);
-        if (playerCharacter.getAgility() == 0) playerCharacter.setAgility(0);
-        if (playerCharacter.getConstitution() == 0) playerCharacter.setConstitution(0);
-        if (playerCharacter.getDexterity() == 0) playerCharacter.setDexterity(0);
-        if (playerCharacter.getIntelligence() == 0) playerCharacter.setIntelligence(0);
-        if (playerCharacter.getPerception() == 0) playerCharacter.setPerception(0);
-        if (playerCharacter.getWisdom() == 0) playerCharacter.setWisdom(0);
-        if (playerCharacter.getCharisma() == 0) playerCharacter.setCharisma(0);
+        playerCharacter.setDefaultAttributes(playerCharacter);
 
         // Guarda el personaje en la base de datos
         return playerCharacterRepository.save(playerCharacter);
